@@ -1,0 +1,407 @@
+{
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "API ProductType management Server by Fiber- Teletubbie's ProductType API.",
+        "title": "ProductType API for For Fiber-Test",
+        "contact": {
+            "name": "Walter White",
+            "url": "https://twitter.com/example",
+            "email": "example@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8081",
+    "basePath": "/",
+    "paths": {
+        "/healthcheck": {
+            "get": {
+                "description": "Health check",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "healthcheck"
+                ],
+                "summary": "Health Check",
+                "operationId": "HealthCheckHandler",
+                "responses": {
+                    "200": {
+                        "description": "Welcome to ProductType Server",
+                        "schema": {
+                            "$ref": "#/definitions/model.StringResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/producttype/": {
+            "get": {
+                "description": "Get all producttype",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "producttype"
+                ],
+                "summary": "Get All ProductType",
+                "responses": {
+                    "200": {
+                        "description": "Get ProductTypes Successfully",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.ProductTypesResponse"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Error Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create producttype",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "producttype"
+                ],
+                "summary": "Create ProductType",
+                "parameters": [
+                    {
+                        "description": "ProductType data to be create",
+                        "name": "ProductType",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ProductTypeCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Create ProductType Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/model.StringResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Error Conflict Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/producttype/count": {
+            "get": {
+                "description": "Get producttype's count from database",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "producttype"
+                ],
+                "summary": "Get ProductType Count",
+                "responses": {
+                    "200": {
+                        "description": "Get ProductType'Count Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/model.CountResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/producttype/{id}": {
+            "get": {
+                "description": "Get producttype by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "producttype"
+                ],
+                "summary": "Get ProductType",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ProductType ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get ProductType Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/model.ProductTypeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Error Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update producttype by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "producttype"
+                ],
+                "summary": "Update ProductType",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ProductType ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "ProductType data to be update",
+                        "name": "ProductType",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ProductTypeUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update ProductType Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/model.StringResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Error Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete producttype by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "producttype"
+                ],
+                "summary": "Delete ProductType",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ProductType ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete ProductType Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/model.StringResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Error Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "errs.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CountResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.ProductType": {
+            "type": "object",
+            "properties": {
+                "ProdType_ID": {
+                    "type": "integer"
+                },
+                "ProdType_Name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ProductTypeCreate": {
+            "type": "object",
+            "required": [
+                "ProdType_ID",
+                "ProdType_Name"
+            ],
+            "properties": {
+                "ProdType_ID": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "ProdType_Name": {
+                    "type": "string",
+                    "maxLength": 40
+                }
+            }
+        },
+        "model.ProductTypeResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "$ref": "#/definitions/model.ProductType"
+                }
+            }
+        },
+        "model.ProductTypeUpdate": {
+            "type": "object",
+            "required": [
+                "ProdType_Name"
+            ],
+            "properties": {
+                "ProdType_Name": {
+                    "type": "string",
+                    "maxLength": 40
+                }
+            }
+        },
+        "model.ProductTypesResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.ProductType"
+                    }
+                }
+            }
+        },
+        "model.StringResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "bearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

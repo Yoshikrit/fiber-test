@@ -1,0 +1,10 @@
+.git
+.gitignore
+
+dev.env
+
+README.md
+
+.air*
+
+*_test.go
