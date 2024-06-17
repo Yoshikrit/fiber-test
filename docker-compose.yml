@@ -1,36 +1,42 @@
 version: "3.8"
 services:
-  postgresql:
+  db:
     container_name: fiber_db
-    image: postgres
+    image: postgres:13
     environment:
-      POSTGRES_DATABASE: teletubbies
       POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      TZ: "Asia/Bangkok"
-    ports:
-      - 5432:5432
+      POSTGRES_PASSWORD: root    
     volumes:
-      - C:\\Users\\acer\\Desktop\\teletubbies-cafe\\PostgresDB:/var/lib/postgresql/data
-    restart: on-failure
+      - tb_pgdata:/var/lib/postgresql/data
+    ports: 
+      - "5432:5432"
+    restart: always
   pgadmin4:
-    container_name: fiber_pgadmin4
-    image: dpage/pgadmin4
-    restart: on-failure
+    container_name: fiber_pgadmin
+    image: elestio/pgadmin:REL-8_8
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
+    volumes:
+      - tb_pgadmin_data:/var/lib/pgadmin
     ports:
       - "5050:80"
     depends_on:
-      - postgresql
+      - db    
+    restart: always
   fibertest-service:
     image: yoshikrit/fiber-test:latest
     container_name: fibertest-service
     ports:
       - 8081:8081
     links:
-      - "postgresql:postgresql"
+      - "db:db"
     depends_on:
-      - postgresql
+      - db
     restart: on-failure
+
+volumes:
+  tb_pgdata:
+    name: tb_pgdata
+  tb_pgadmin_data:
+    name: tb_pgadmin_data

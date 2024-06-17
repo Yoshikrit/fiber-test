@@ -66,36 +66,100 @@ func TestHandleError(t *testing.T) {
 	})
 }
 
-func TestParamsInt(t *testing.T) {
-	app := fiber.New()
+func TestValidateUserCreate(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    *model.UserCreate
+		expected []errs.ErrorMessage
+	}{
+		{
+			name:  "Valid user",
+			input: &model.UserCreate{
+				ID: 1, 
+				RoleID: 1,
+				Name: "ValidName",
+				Email: "walter_white1@gmail.com",
+				Password: "ValidPassword",
+			},
+			expected: []errs.ErrorMessage(nil),
+		},
+		{
+			name:  "Invalid user - missing ID",
+			input: &model.UserCreate{
+				ID: 0, 
+				RoleID: 1,
+				Name: "ValidName",
+				Email: "walter_white2@gmail.com",
+				Password: "ValidPassword",
+			},
+			expected: []errs.ErrorMessage{
+				{
+					FailedField: "UserCreate.ID", 
+					Tag: "required", Value: "",
+				},
+			},
+		},
+		{
+			name:  "Invalid user - missing Name",
+			input: &model.UserCreate{
+				ID: 1, 
+				RoleID: 1,
+				Name: "",
+				Email: "walter_white3@gmail.com",
+				Password: "ValidPassword",
+			},
+			expected: []errs.ErrorMessage{
+				{
+					FailedField: "UserCreate.Name", 
+					Tag: "required", Value: "",
+				},
+			},
+		},
+	}
 
-	app.Get("/int/:id", func(ctx *fiber.Ctx) error {
-		id, err := helper.ParamsInt(ctx)
-		if err != nil {
-			return helper.HandleError(ctx, err)
-		}
-		return ctx.JSON(fiber.Map{"id": id})
-	})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := helper.ValidateUserCreate(tt.input)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
 
-	t.Run("Valid Integer ID", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/int/123", nil)
-		resp, _ := app.Test(req, -1)
-		assert.Equal(t, http.StatusOK, resp.StatusCode)
+func TestValidateLoginRequest(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    *model.LoginRequest
+		expected []errs.ErrorMessage
+	}{
+		{
+			name:  "Valid login",
+			input: &model.LoginRequest{
+				Email: "walter_white1@gmail.com", 
+				Password: "ValidPassword",
+			},
+			expected: []errs.ErrorMessage(nil),
+		},
+		{
+			name:  "Invalid login - missing Email",
+			input: &model.LoginRequest{
+				Email: "", 
+				Password: "ValidPassword",
+			},
+			expected: []errs.ErrorMessage{
+				{
+					FailedField: "LoginRequest.Email", 
+					Tag: "required", Value: "",
+				},
+			},
+		},
+	}
 
-		expectedBody := `{"id":123}`
-		body, _ := io.ReadAll(resp.Body)
-		assert.JSONEq(t, expectedBody, string(body))
-	})
-
-	t.Run("Invalid Non-Integer ID", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/int/abc", nil)
-		resp, _ := app.Test(req, -1)
-		assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
-
-		expectedBody := `{"code":400,"message":"Invalid ID: abc is not integer"}`
-		body, _ := io.ReadAll(resp.Body)
-		assert.JSONEq(t, expectedBody, string(body))
-	})
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := helper.ValidateLoginRequest(tt.input)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
 }
 
 func TestValidateProductTypeCreate(t *testing.T) {

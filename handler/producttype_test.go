@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	EndpointPath = "/producttype"
+	EndpointPath = "/producttypes"
 )
 
 func TestCreate(t *testing.T) {

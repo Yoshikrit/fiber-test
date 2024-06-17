@@ -6,8 +6,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/go-playground/validator/v10"
-	
-	"strconv"
 )
 
 func HandleError(ctx *fiber.Ctx, err error) error {
@@ -30,13 +28,36 @@ func HandleError(ctx *fiber.Ctx, err error) error {
 	}
 }
 
-func ParamsInt(ctx *fiber.Ctx) (int, error) {
-	idParam := ctx.Params("id")
-	id, err := strconv.Atoi(idParam)
-	if err != nil {
-		return 0, errs.NewBadRequestError("Invalid ID: " + idParam + " is not integer")
-	}
-	return id, nil
+func ValidateUserCreate(userCreateReq *model.UserCreate) []errs.ErrorMessage {
+    var errors []errs.ErrorMessage
+    validate := validator.New()
+    err := validate.Struct(userCreateReq)
+    if err != nil {
+        for _, err := range err.(validator.ValidationErrors) {
+            var element errs.ErrorMessage
+            element.FailedField = err.StructNamespace()
+            element.Tag = err.Tag()
+            element.Value = err.Param()
+            errors = append(errors, element)
+        }
+    }
+    return errors
+}
+
+func ValidateLoginRequest(logReq *model.LoginRequest) []errs.ErrorMessage {
+    var errors []errs.ErrorMessage
+    validate := validator.New()
+    err := validate.Struct(logReq)
+    if err != nil {
+        for _, err := range err.(validator.ValidationErrors) {
+            var element errs.ErrorMessage
+            element.FailedField = err.StructNamespace()
+            element.Tag = err.Tag()
+            element.Value = err.Param()
+            errors = append(errors, element)
+        }
+    }
+    return errors
 }
 
 func ValidateProductTypeCreate(prod *model.ProductTypeCreate) []errs.ErrorMessage {

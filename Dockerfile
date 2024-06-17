@@ -17,7 +17,6 @@ WORKDIR /
 COPY --from=build-stage /fiber-test /fiber-test
 
 COPY prod.env ./
-RUN apk add --no-cache tzdata
 ENV APP_ENV=prod
 
 EXPOSE 8080

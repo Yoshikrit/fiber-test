@@ -32,8 +32,8 @@ func (r *ProductTypeRepositoryImpl) FindAll() ([]model.ProductTypeEntity, error)
 }
 
 func (r *ProductTypeRepositoryImpl) FindByID(id int) (*model.ProductTypeEntity, error) {
-	var prodTypesEntity model.ProductTypeEntity
-	err := r.db.First(&prodTypesEntity, id).Error
+	var prodTypeEntity model.ProductTypeEntity
+	err := r.db.First(&prodTypeEntity, id).Error
 	if err != nil {
 		if gorm.ErrRecordNotFound == err {
 			return nil, errs.NewNotFoundError(err.Error())
@@ -41,7 +41,7 @@ func (r *ProductTypeRepositoryImpl) FindByID(id int) (*model.ProductTypeEntity, 
 		return nil, errs.NewInternalServerError(err.Error())
 	}
 
-	return &prodTypesEntity, nil
+	return &prodTypeEntity, nil
 }
 
 func (r *ProductTypeRepositoryImpl) Update(prodTypeUpdateReq *model.ProductTypeEntity) error{

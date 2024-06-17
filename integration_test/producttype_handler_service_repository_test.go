@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	endpointPath = "/producttype"
+	endpointPath = "/producttypes"
 	recordNotFound = "record not found"
 )
 

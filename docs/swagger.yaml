@@ -7,6 +7,13 @@ definitions:
       message:
         type: string
     type: object
+  model.AuthPassportResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        $ref: '#/definitions/model.UserPassport'
+    type: object
   model.CountResponse:
     properties:
       code:
@@ -14,24 +21,36 @@ definitions:
       message:
         type: integer
     type: object
+  model.LoginRequest:
+    properties:
+      user_email:
+        maxLength: 40
+        type: string
+      user_password:
+        maxLength: 255
+        type: string
+    required:
+    - user_email
+    - user_password
+    type: object
   model.ProductType:
     properties:
-      ProdType_ID:
+      prodtype_id:
         type: integer
-      ProdType_Name:
+      prodtype_name:
         type: string
     type: object
   model.ProductTypeCreate:
     properties:
-      ProdType_ID:
+      prodtype_id:
         minimum: 0
         type: integer
-      ProdType_Name:
+      prodtype_name:
         maxLength: 40
         type: string
     required:
-    - ProdType_ID
-    - ProdType_Name
+    - prodtype_id
+    - prodtype_name
     type: object
   model.ProductTypeResponse:
     properties:
@@ -42,11 +61,11 @@ definitions:
     type: object
   model.ProductTypeUpdate:
     properties:
-      ProdType_Name:
+      prodtype_name:
         maxLength: 40
         type: string
     required:
-    - ProdType_Name
+    - prodtype_name
     type: object
   model.ProductTypesResponse:
     properties:
@@ -57,11 +76,65 @@ definitions:
           $ref: '#/definitions/model.ProductType'
         type: array
     type: object
+  model.RefreshToken:
+    properties:
+      refresh_token:
+        type: string
+    type: object
   model.StringResponse:
     properties:
       code:
         type: integer
       message:
+        type: string
+    type: object
+  model.UserCreate:
+    properties:
+      role_id:
+        type: integer
+      user_email:
+        maxLength: 50
+        type: string
+      user_id:
+        type: integer
+      user_name:
+        maxLength: 40
+        type: string
+      user_password:
+        maxLength: 255
+        type: string
+    required:
+    - role_id
+    - user_email
+    - user_id
+    - user_name
+    - user_password
+    type: object
+  model.UserDTO:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      roleID:
+        type: integer
+    type: object
+  model.UserPassport:
+    properties:
+      token:
+        $ref: '#/definitions/model.UserToken'
+      user:
+        $ref: '#/definitions/model.UserDTO'
+    type: object
+  model.UserToken:
+    properties:
+      access_token:
+        type: string
+      oauth_id:
+        type: integer
+      refresh_token:
         type: string
     type: object
 host: localhost:8081
@@ -70,14 +143,141 @@ info:
     email: example@gmail.com
     name: Walter White
     url: https://twitter.com/example
-  description: API ProductType management Server by Fiber- Teletubbie's ProductType
+  description: API ProductType management Server by Fiber-Teletubbie's ProductType
     API.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  title: ProductType API for For Fiber-Test
+  title: ProductType API for Fiber-Test
   version: "1.0"
 paths:
+  /auths/:
+    post:
+      description: Register user
+      parameters:
+      - description: User data to be register
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserCreate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Register User Successfully
+          schema:
+            $ref: '#/definitions/model.StringResponse'
+        "400":
+          description: Error Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+        "409":
+          description: Error Conflict Error
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+        "500":
+          description: Error Unexpected Error
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+      summary: Register User
+      tags:
+      - auths
+  /auths/login:
+    post:
+      description: Login user
+      parameters:
+      - description: User data to be login
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login User Successfully
+          schema:
+            $ref: '#/definitions/model.AuthPassportResponse'
+        "400":
+          description: Error Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+        "409":
+          description: Error Conflict Error
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+        "500":
+          description: Error Unexpected Error
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+      summary: Login User
+      tags:
+      - auths
+  /auths/logout/{id}:
+    delete:
+      description: Logout user
+      parameters:
+      - description: Oauth ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Logout User Successfully
+          schema:
+            $ref: '#/definitions/model.StringResponse'
+        "400":
+          description: Error Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+        "409":
+          description: Error Conflict Error
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+        "500":
+          description: Error Unexpected Error
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+      summary: Logout User
+      tags:
+      - auths
+  /auths/reflesh:
+    post:
+      description: Refresh Token
+      parameters:
+      - description: User data to be reflesh token
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/model.RefreshToken'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Reflesh Token Successfully
+          schema:
+            $ref: '#/definitions/model.AuthPassportResponse'
+        "400":
+          description: Error Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+        "409":
+          description: Error Conflict Error
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+        "500":
+          description: Error Unexpected Error
+          schema:
+            $ref: '#/definitions/errs.ErrorResponse'
+      summary: Refresh Token
+      tags:
+      - auths
   /healthcheck:
     get:
       description: Health check
@@ -92,7 +292,7 @@ paths:
       summary: Health Check
       tags:
       - healthcheck
-  /producttype/:
+  /producttypes/:
     get:
       description: Get all producttype
       produces:
@@ -112,9 +312,11 @@ paths:
           description: Error Unexpected Error
           schema:
             $ref: '#/definitions/errs.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get All ProductType
       tags:
-      - producttype
+      - producttypes
     post:
       description: Create producttype
       parameters:
@@ -143,10 +345,12 @@ paths:
           description: Error Unexpected Error
           schema:
             $ref: '#/definitions/errs.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Create ProductType
       tags:
-      - producttype
-  /producttype/{id}:
+      - producttypes
+  /producttypes/{id}:
     delete:
       description: Delete producttype by id
       parameters:
@@ -174,9 +378,11 @@ paths:
           description: Error Unexpected Error
           schema:
             $ref: '#/definitions/errs.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Delete ProductType
       tags:
-      - producttype
+      - producttypes
     get:
       description: Get producttype by id
       parameters:
@@ -204,9 +410,11 @@ paths:
           description: Error Unexpected Error
           schema:
             $ref: '#/definitions/errs.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get ProductType
       tags:
-      - producttype
+      - producttypes
     put:
       description: Update producttype by id
       parameters:
@@ -240,10 +448,12 @@ paths:
           description: Error Unexpected Error
           schema:
             $ref: '#/definitions/errs.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Update ProductType
       tags:
-      - producttype
-  /producttype/count:
+      - producttypes
+  /producttypes/count:
     get:
       description: Get producttype's count from database
       produces:
@@ -257,14 +467,17 @@ paths:
           description: Error Unexpected Error
           schema:
             $ref: '#/definitions/errs.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get ProductType Count
       tags:
-      - producttype
+      - producttypes
 schemes:
 - http
 - https
 securityDefinitions:
-  bearerAuth:
+  BearerAuth:
+    description: '"Type ''Bearer'' followed by a space and your JWT token."'
     in: header
     name: Authorization
     type: apiKey

@@ -4,13 +4,14 @@ import (
 	"github.com/Yoshikrit/fiber-test/router"
 	"github.com/Yoshikrit/fiber-test/config"
 	"github.com/Yoshikrit/fiber-test/middleware"
-	"github.com/Yoshikrit/fiber-test/model"
+	// "github.com/Yoshikrit/fiber-test/model"
 	
 	"github.com/gofiber/fiber/v2"
+	"github.com/goccy/go-json"
 )
 
-// @title ProductType API for For Fiber-Test
-// @description API ProductType management Server by Fiber- Teletubbie's ProductType API.
+// @title ProductType API for Fiber-Test
+// @description API ProductType management Server by Fiber-Teletubbie's ProductType API.
 // @version 1.0
 
 // @contact.name   Walter White
@@ -25,25 +26,33 @@ import (
 
 // @schemes http https
 
-// @securityDefinitions.apikey bearerAuth
+// @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
+// @description "Type 'Bearer' followed by a space and your JWT token."
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		JSONEncoder: json.Marshal,
+		JSONDecoder: json.Unmarshal,
+	})
 	
 	//config
-	loadConfig, err := config.LoadConfig()
+	err := config.LoadConfig()
 	if err != nil {
 		panic(err)
 	}
-	config.InitTimeZone()
+
+	configData, err := config.GetConfig()
+	if err != nil {
+		panic(err)
+	}
 
 	//Database
-	db := config.ConnectionDB(&loadConfig)
-	db.AutoMigrate(&model.ProductTypeEntity{})
+	db := config.ConnectionDB(&configData)
+	// db.AutoMigrate(&model.ProductTypeEntity{}, &models.UserEntity{}, &models.RoleEntity{}, &models.OauthEntity{})
 
 	//Routes
-	routes := router.NewRouter(db)
+	router.NewRouter(app, db)
 
 	//middleware
 	app.Use(
@@ -52,8 +61,8 @@ func main() {
 		middleware.Logger(), 
 		middleware.Health(),
 		middleware.Limiter(),
+		middleware.Helmet(),
 	)
-	app.Mount("/", routes)
 
-	app.Listen(":" +  loadConfig.ServerPort)
+	app.Listen(":" +  configData.ServerPort)
 }

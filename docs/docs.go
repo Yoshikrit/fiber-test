@@ -23,6 +23,200 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auths/": {
+            "post": {
+                "description": "Register user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auths"
+                ],
+                "summary": "Register User",
+                "parameters": [
+                    {
+                        "description": "User data to be register",
+                        "name": "User",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UserCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Register User Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/model.StringResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Error Conflict Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auths/login": {
+            "post": {
+                "description": "Login user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auths"
+                ],
+                "summary": "Login User",
+                "parameters": [
+                    {
+                        "description": "User data to be login",
+                        "name": "User",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login User Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/model.AuthPassportResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Error Conflict Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auths/logout/{id}": {
+            "delete": {
+                "description": "Logout user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auths"
+                ],
+                "summary": "Logout User",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Oauth ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Logout User Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/model.StringResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Error Conflict Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auths/reflesh": {
+            "post": {
+                "description": "Refresh Token",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auths"
+                ],
+                "summary": "Refresh Token",
+                "parameters": [
+                    {
+                        "description": "User data to be reflesh token",
+                        "name": "User",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.RefreshToken"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reflesh Token Successfully",
+                        "schema": {
+                            "$ref": "#/definitions/model.AuthPassportResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Error Conflict Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Error Unexpected Error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/healthcheck": {
             "get": {
                 "description": "Health check",
@@ -44,14 +238,19 @@ const docTemplate = `{
                 }
             }
         },
-        "/producttype/": {
+        "/producttypes/": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all producttype",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "producttype"
+                    "producttypes"
                 ],
                 "summary": "Get All ProductType",
                 "responses": {
@@ -79,12 +278,17 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create producttype",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "producttype"
+                    "producttypes"
                 ],
                 "summary": "Create ProductType",
                 "parameters": [
@@ -126,14 +330,19 @@ const docTemplate = `{
                 }
             }
         },
-        "/producttype/count": {
+        "/producttypes/count": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get producttype's count from database",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "producttype"
+                    "producttypes"
                 ],
                 "summary": "Get ProductType Count",
                 "responses": {
@@ -152,14 +361,19 @@ const docTemplate = `{
                 }
             }
         },
-        "/producttype/{id}": {
+        "/producttypes/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get producttype by id",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "producttype"
+                    "producttypes"
                 ],
                 "summary": "Get ProductType",
                 "parameters": [
@@ -199,12 +413,17 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update producttype by id",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "producttype"
+                    "producttypes"
                 ],
                 "summary": "Update ProductType",
                 "parameters": [
@@ -253,12 +472,17 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete producttype by id",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "producttype"
+                    "producttypes"
                 ],
                 "summary": "Delete ProductType",
                 "parameters": [
@@ -311,6 +535,17 @@ const docTemplate = `{
                 }
             }
         },
+        "model.AuthPassportResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "$ref": "#/definitions/model.UserPassport"
+                }
+            }
+        },
         "model.CountResponse": {
             "type": "object",
             "properties": {
@@ -322,13 +557,30 @@ const docTemplate = `{
                 }
             }
         },
+        "model.LoginRequest": {
+            "type": "object",
+            "required": [
+                "user_email",
+                "user_password"
+            ],
+            "properties": {
+                "user_email": {
+                    "type": "string",
+                    "maxLength": 40
+                },
+                "user_password": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            }
+        },
         "model.ProductType": {
             "type": "object",
             "properties": {
-                "ProdType_ID": {
+                "prodtype_id": {
                     "type": "integer"
                 },
-                "ProdType_Name": {
+                "prodtype_name": {
                     "type": "string"
                 }
             }
@@ -336,15 +588,15 @@ const docTemplate = `{
         "model.ProductTypeCreate": {
             "type": "object",
             "required": [
-                "ProdType_ID",
-                "ProdType_Name"
+                "prodtype_id",
+                "prodtype_name"
             ],
             "properties": {
-                "ProdType_ID": {
+                "prodtype_id": {
                     "type": "integer",
                     "minimum": 0
                 },
-                "ProdType_Name": {
+                "prodtype_name": {
                     "type": "string",
                     "maxLength": 40
                 }
@@ -364,10 +616,10 @@ const docTemplate = `{
         "model.ProductTypeUpdate": {
             "type": "object",
             "required": [
-                "ProdType_Name"
+                "prodtype_name"
             ],
             "properties": {
-                "ProdType_Name": {
+                "prodtype_name": {
                     "type": "string",
                     "maxLength": 40
                 }
@@ -387,6 +639,14 @@ const docTemplate = `{
                 }
             }
         },
+        "model.RefreshToken": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
         "model.StringResponse": {
             "type": "object",
             "properties": {
@@ -397,10 +657,83 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "model.UserCreate": {
+            "type": "object",
+            "required": [
+                "role_id",
+                "user_email",
+                "user_id",
+                "user_name",
+                "user_password"
+            ],
+            "properties": {
+                "role_id": {
+                    "type": "integer"
+                },
+                "user_email": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "user_name": {
+                    "type": "string",
+                    "maxLength": 40
+                },
+                "user_password": {
+                    "type": "string",
+                    "maxLength": 255
+                }
+            }
+        },
+        "model.UserDTO": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "roleID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.UserPassport": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "$ref": "#/definitions/model.UserToken"
+                },
+                "user": {
+                    "$ref": "#/definitions/model.UserDTO"
+                }
+            }
+        },
+        "model.UserToken": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "oauth_id": {
+                    "type": "integer"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {
-        "bearerAuth": {
+        "BearerAuth": {
+            "description": "\"Type 'Bearer' followed by a space and your JWT token.\"",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
@@ -414,8 +747,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8081",
 	BasePath:         "/",
 	Schemes:          []string{"http", "https"},
-	Title:            "ProductType API for For Fiber-Test",
-	Description:      "API ProductType management Server by Fiber- Teletubbie's ProductType API.",
+	Title:            "ProductType API for Fiber-Test",
+	Description:      "API ProductType management Server by Fiber-Teletubbie's ProductType API.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

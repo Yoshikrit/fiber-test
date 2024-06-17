@@ -21,14 +21,15 @@ func NewProductTypeHandler(productTypeSrv service.ProductTypeService) *ProductTy
 // CreateProductType godoc
 // @Summary Create ProductType
 // @Description Create producttype
-// @Tags producttype
+// @Tags producttypes
+// @Security BearerAuth
 // @Produce  json
 // @param ProductType body model.ProductTypeCreate true "ProductType data to be create"
 // @response 201 {object} model.StringResponse "Create ProductType Successfully"
 // @response 400 {object} errs.ErrorResponse "Error Bad Request"
 // @response 409 {object} errs.ErrorResponse "Error Conflict Error"
 // @response 500 {object} errs.ErrorResponse "Error Unexpected Error"
-// @Router /producttype/ [post]
+// @Router /producttypes/ [post]
 func (h *ProductTypeHandler) Create(ctx *fiber.Ctx) error {
     ctx.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
     ctx.Set(fiber.HeaderAccept, fiber.MIMEApplicationJSON)
@@ -56,12 +57,13 @@ func (h *ProductTypeHandler) Create(ctx *fiber.Ctx) error {
 // GetAllProductTypes godoc
 // @Summary Get All ProductType
 // @Description Get all producttype
-// @Tags producttype
+// @Tags producttypes
+// @Security BearerAuth
 // @Produce  json
 // @response 200 {array} model.ProductTypesResponse "Get ProductTypes Successfully"
 // @response 404 {object} errs.ErrorResponse "Error Not Found"
 // @response 500 {object} errs.ErrorResponse "Error Unexpected Error"
-// @Router /producttype/ [get]
+// @Router /producttypes/ [get]
 func (h *ProductTypeHandler) FindAll(ctx *fiber.Ctx) error {
     ctx.Set(fiber.HeaderAccept, fiber.MIMEApplicationJSON)
 	
@@ -82,14 +84,15 @@ func (h *ProductTypeHandler) FindAll(ctx *fiber.Ctx) error {
 // GetProductTypeByID godoc
 // @Summary Get ProductType
 // @Description Get producttype by id
-// @Tags producttype
+// @Tags producttypes
+// @Security BearerAuth
 // @Produce  json
 // @Param        id   path      int  true  "ProductType ID"
 // @response 200 {object} model.ProductTypeResponse "Get ProductType Successfully"
 // @response 400 {object} errs.ErrorResponse "Error Bad Request"
 // @response 404 {object} errs.ErrorResponse "Error Not Found"
 // @response 500 {object} errs.ErrorResponse "Error Unexpected Error"
-// @Router /producttype/{id} [get]
+// @Router /producttypes/{id} [get]
 func (h *ProductTypeHandler) FindByID(ctx *fiber.Ctx) error {
     ctx.Set(fiber.HeaderAccept, fiber.MIMEApplicationJSON)
 	
@@ -108,7 +111,7 @@ func (h *ProductTypeHandler) FindByID(ctx *fiber.Ctx) error {
 	logger.Info("Handler: Find ProductType By ID Successfully")
 	webResponse := model.ProductTypeResponse{
 		Code: 		200,
-		Message: 	*prodTypeRes,
+		Message: 	prodTypeRes,
 	}
 	return ctx.Status(fiber.StatusOK).JSON(webResponse)
 }
@@ -116,7 +119,8 @@ func (h *ProductTypeHandler) FindByID(ctx *fiber.Ctx) error {
 // UpdateProductTypeByID godoc
 // @Summary Update ProductType
 // @Description Update producttype by id
-// @Tags producttype
+// @Tags producttypes
+// @Security BearerAuth
 // @Produce  json
 // @Param        id   path      int  true  "ProductType ID"
 // @param ProductType body model.ProductTypeUpdate true "ProductType data to be update"
@@ -124,7 +128,7 @@ func (h *ProductTypeHandler) FindByID(ctx *fiber.Ctx) error {
 // @response 400 {object} errs.ErrorResponse "Error Bad Request"
 // @response 404 {object} errs.ErrorResponse "Error Not Found"
 // @response 500 {object} errs.ErrorResponse "Error Unexpected Error"
-// @Router /producttype/{id} [put]
+// @Router /producttypes/{id} [put]
 func (h *ProductTypeHandler) Update(ctx *fiber.Ctx) error {
     ctx.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
     ctx.Set(fiber.HeaderAccept, fiber.MIMEApplicationJSON)
@@ -157,16 +161,18 @@ func (h *ProductTypeHandler) Update(ctx *fiber.Ctx) error {
 // DeleteProductTypeByID godoc
 // @Summary Delete ProductType
 // @Description Delete producttype by id
-// @Tags producttype
+// @Tags producttypes
+// @Security BearerAuth
 // @Produce  json
 // @Param        id   path      int  true  "ProductType ID"
 // @response 200 {object} model.StringResponse "Delete ProductType Successfully"
 // @response 400 {object} errs.ErrorResponse "Error Bad Request"
 // @response 404 {object} errs.ErrorResponse "Error Not Found"
 // @response 500 {object} errs.ErrorResponse "Error Unexpected Error"
-// @Router /producttype/{id} [delete]
+// @Router /producttypes/{id} [delete]
 func (h *ProductTypeHandler) Delete(ctx *fiber.Ctx) error {
     ctx.Set(fiber.HeaderAccept, fiber.MIMEApplicationJSON)
+	logger.Info("yes")
 
 	id, err := helper.ParamsInt(ctx)
 	if err != nil {
@@ -190,11 +196,12 @@ func (h *ProductTypeHandler) Delete(ctx *fiber.Ctx) error {
 // GetProductTypeCount godoc
 // @Summary Get ProductType Count
 // @Description Get producttype's count from database
-// @Tags producttype
+// @Tags producttypes
+// @Security BearerAuth
 // @Produce  json
 // @response 200 {object} model.CountResponse "Get ProductType'Count Successfully"
 // @response 500 {object} errs.ErrorResponse "Error Unexpected Error"
-// @Router /producttype/count [get]
+// @Router /producttypes/count [get]
 func (h *ProductTypeHandler) Count(ctx *fiber.Ctx) error {
     ctx.Set(fiber.HeaderAccept, fiber.MIMEApplicationJSON)
 

@@ -6,5 +6,6 @@ dev.env
 README.md
 
 .air*
+.yml*
 
 *_test.go
